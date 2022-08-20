@@ -5,8 +5,8 @@ import psycopg2
 conn = psycopg2.connect(
         host="localhost",
         database="mydb",
-        user="username",
-        password="parol123")
+        user="user2",
+        password="123456")
 
 cursor = conn.cursor()
 
@@ -51,13 +51,38 @@ def searchByNotion(search):
     return cursor.fetchall()
 
 # insert_company()
+def updateCompanyName(id,name):
+    query = "UPDATE companies SET company_name = '%s' WHERE id = %d" % (name,id)
+    cursor.execute(query)
+    conn.commit()
 
+def getCompanies(offset,limit):
+    query = "SELECT * FROM companies ORDER BY id OFFSET %d LIMIT %d" % ((offset - 1) * 10,limit)
+
+    cursor.execute(query)
+
+    return cursor.fetchall()
+
+
+'''
 search = input("Search by nation or company code:")
 data = searchByNotion(search)
 
 for val in data:
     print(*val)
+'''
 
 
+offset = int(input("varog'ini kiriting:"))
+limit = int(input("limit kiriting:"))
+
+data = getCompanies(offset, limit)
+for val in data:
+    print(*val)
+
+id = int (input("Id ni kiriting"))
+nname = input("yangi nomni kirit")
+
+updateCompanyName(id,nname)
 conn.close()
 
